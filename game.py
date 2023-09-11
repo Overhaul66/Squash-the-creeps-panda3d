@@ -52,20 +52,27 @@ class Game(ShowBase):
     def move_player(self, task):
         dt = globalClock.get_dt()
         #print(dt)
-        self.direction = Vec3()
+        direction = Vec3()
 
         if self.keys["move_right"]:
-            self.direction.x += 1
+            direction.x += 1
         if self.keys["move_left"]:
-            self.direction.x -= 1
+            direction.x -= 1
         if self.keys["move_down"]:
-            self.direction.y -= 1
+            direction.y -= 1
         if self.keys["move_up"]:
-            self.direction.y += 1
+            direction.y += 1
 
-        velocity = self.direction * self.speed * dt
-        velocity.normalized()
-        self.player.setPos(self.player.getPos() + velocity)
+        direction = direction.normalized()
+        if direction != Vec3():
+            self.player.look_at(self.player.getPos() + direction)
+        
+        self.velocity = direction * self.speed * dt
+        self.player.setPos(self.player.getPos() + self.velocity)
+        
+        
+
+        print(self.velocity)
         return task.cont
     
     def update_key(self, action , state):
